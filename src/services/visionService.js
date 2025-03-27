@@ -108,7 +108,7 @@ export async function processImage(file) {
         if (line.includes('Team') || line.includes('Round') || line.includes('Match')) return false;
 
         // Skip common game-specific terms
-        const skipTerms = ['ATK', 'DEF', 'ATTACKER', 'DEFENDER', 'ROUND', 'MATCH', 'TEAM'];
+        const skipTerms = ['ATK','DFF','ATC','ATV', 'A1K','DEC', 'DEB', 'BEF', 'OEF', 'D€F', 'D3F', '', 'DEF', 'ATTACKER', 'DEFENDER', 'ROUND', 'MATCH', 'TEAM'];
         if (skipTerms.some(term => line.toUpperCase().includes(term))) return false;
 
         // Skip single numbers (1-5)
