@@ -4,7 +4,7 @@ const GOOGLE_CLOUD_VISION_API_URL = 'https://vision.googleapis.com/v1/images:ann
 
 const isValidPSNUsername = (username) => {
   // PSN rules
-  if (username.length < 3 || username.length > 15) return false;
+  if (username.length < 3 || username.length > 16) return false;
   if (!/^[a-zA-Z]/.test(username)) return false;
   if (!/^[a-zA-Z0-9_-]+$/.test(username)) return false;
   if (username.includes('  ')) return false;
@@ -236,10 +236,10 @@ export async function processImage(file) {
         }
 
         // If no bounding box is available, validate against the determined platform
-        if (!isValidUsername(cleanLine, platform)) {
+        /* if (!isValidUsername(cleanLine, platform)) {
           console.log(`Invalid ${platform} username: ${cleanLine}`);
           return null;
-        }
+        } */
 
         // Check if name might need editing
         const needsEdit = cleanLine !== line || // This will be true if we removed numbers/periods
