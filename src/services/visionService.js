@@ -4,7 +4,7 @@ const GOOGLE_CLOUD_VISION_API_URL = 'https://vision.googleapis.com/v1/images:ann
 
 const isValidPSNUsername = (username) => {
   // PSN rules
-  if (username.length < 3 || username.length > 16) return false;
+  if (username.length < 3 || username.length > 15) return false;
   if (!/^[a-zA-Z]/.test(username)) return false;
   if (!/^[a-zA-Z0-9_-]+$/.test(username)) return false;
   if (username.includes('  ')) return false;
@@ -108,7 +108,7 @@ export async function processImage(file) {
         if (line.includes('Team') || line.includes('Round') || line.includes('Match')) return false;
 
         // Skip common game-specific terms
-        const skipTerms = ['ATK','DFF','ATC','ATV', 'A1K','DEC', 'DEB', 'BEF', 'OEF', 'D€F', 'D3F', '', 'DEF', 'ATTACKER', 'DEFENDER', 'ROUND', 'MATCH', 'TEAM'];
+        const skipTerms = ['ATK','DFF','ATC','ATV', 'A1K','DEC', 'DEB', 'BEF', 'OEF', 'D€F', 'D3F', 'DEF', 'ATTACKER', 'DEFENDER', 'ROUND', 'MATCH', 'TEAM'];
         if (skipTerms.some(term => line.toUpperCase().includes(term))) return false;
 
         // Skip single numbers (1-5)
