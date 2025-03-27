@@ -6,16 +6,20 @@ const isValidPSNUsername = (username) => {
   // PSN rules
   if (username.length < 3 || username.length > 16) return false;
   if (!/^[a-zA-Z]/.test(username)) return false;
+  // PSN usernames allow letters, numbers, underscores, and hyphens only
   if (!/^[a-zA-Z0-9_-]+$/.test(username)) return false;
+  // No consecutive spaces (but allow consecutive underscores and hyphens as they are valid)
   if (username.includes('  ')) return false;
   return true;
 };
 
 const isValidXboxUsername = (username) => {
   // Xbox rules
-  if (username.length < 3 || username.length > 12) return false;
+  if (username.length < 3 || username.length > 15) return false;
   if (!/^[a-zA-Z]/.test(username)) return false;
-  if (!/^[a-zA-Z0-9' ]+$/.test(username)) return false;
+  // Xbox usernames allow letters, numbers, and spaces
+  if (!/^[a-zA-Z0-9 ]+$/.test(username)) return false;
+  // No consecutive spaces
   if (username.includes('  ')) return false;
   return true;
 };
@@ -24,7 +28,10 @@ const isValidPCUsername = (username) => {
   // PC rules
   if (username.length < 3 || username.length > 15) return false;
   if (!/^[a-zA-Z]/.test(username)) return false;
+  // PC usernames allow letters, numbers, periods, underscores, and hyphens
   if (!/^[a-zA-Z0-9._-]+$/.test(username)) return false;
+  // No consecutive special characters (except allow -- and __ as they may be valid)
+  if (username.includes('...')) return false;
   return true;
 };
 
@@ -103,12 +110,18 @@ export async function processImage(file) {
         // Skip empty lines
         if (!line || line.length === 0) return false;
 
+        // Skip single characters or very short strings that aren't usernames
+        if (line.length < 3) return false;
+
+        // Skip lines that are ONLY numbers (but keep lines that have numbers followed by text)
+        if (/^\d+$/.test(line)) return false;
+
         // Skip common non-player text
         if (line.includes('K/D') || line.includes('Score') || line.includes('Level')) return false;
         if (line.includes('Team') || line.includes('Round') || line.includes('Match')) return false;
 
         // Skip common game-specific terms
-        const skipTerms = ['ATK','DFF','ATC','ATV', 'A1K','DEC', 'DEB', 'BEF', 'OEF', 'D€F', 'D3F', 'DEF', 'ATTACKER', 'DEFENDER', 'ROUND', 'MATCH', 'TEAM'];
+        const skipTerms = ['ATK','DFF','ATC','ATV', 'A1K','DEC', 'DEB', 'BEF', 'OEF', 'D€F', 'D3F', 'DEF', 'O O','ATTACKER', 'DEFENDER', 'ROUND', 'MATCH', 'TEAM'];
         if (skipTerms.some(term => line.toUpperCase().includes(term))) return false;
 
         // Skip single numbers (1-5)
@@ -120,8 +133,23 @@ export async function processImage(file) {
         // Skip lines that contain multiple spaces
         if (line.includes('  ')) return false;
 
-        // Skip lines that are just numbers followed by spaces
+        // Skip lines that are just numbers followed by spaces with no name
         if (/^\d+\s+$/.test(line)) return false;
+
+        // Skip lines with invalid characters that are definitely not player names (excluding ? which might be at the start)
+        if (/[+*=&%$#@!;:,<>\\|]/.test(line)) return false;
+        
+        // Skip lines with non-Latin characters that are likely OCR errors
+        if (/[^\x00-\x7F]/.test(line)) return false;
+
+        // Allow lines that contain a number followed by a period and name
+        if (/^\d+\.\s*[a-zA-Z]/.test(line)) return true;
+        
+        // Allow lines that start with ? followed by a letter (these are likely OCR errors)
+        if (/^\?[a-zA-Z]/.test(line)) return true;
+
+        // For non-numbered lines, ensure it starts with a letter
+        if (!/^[a-zA-Z]/.test(line)) return false;
 
         return true;
       })
@@ -143,8 +171,28 @@ export async function processImage(file) {
           trackerUrl = `https://r6.tracker.network/r6siege/profile/xbl/${encodeURIComponent(line)}/overview`;
         }
 
-        // Clean up the line by removing numbers and periods at the start
-        const cleanLine = line.replace(/^\d+\.\s*/, '').trim();
+        // Check if line starts with a number followed by a period and space
+        const hasNumberPrefix = /^\d+\.\s+/.test(line);
+        
+        // Check if line starts with a question mark (OCR error)
+        const hasQuestionMarkPrefix = /^\?/.test(line);
+
+        // Clean up the line by removing numbers/periods/question marks at the start
+        let cleanLine = line;
+        if (hasNumberPrefix) {
+            cleanLine = line.replace(/^\d+\.\s*/, '').trim();
+        } else if (hasQuestionMarkPrefix) {
+            cleanLine = line.replace(/^\?/, '').trim();
+        }
+        
+        // Further clean the line by removing invalid characters
+        // Remove any non-alphanumeric, underscore, period, dash, and space characters
+        const sanitizedLine = cleanLine.replace(/[^a-zA-Z0-9._\- ]/g, '').trim();
+
+        // Skip if we don't have a valid username after cleaning
+        if (sanitizedLine.length < 3 || !/^[a-zA-Z]/.test(sanitizedLine)) {
+          return null;
+        }
 
         if (lineAnnotation && lineAnnotation.boundingBox) {
           // Get the bounding box for the line
@@ -184,7 +232,7 @@ export async function processImage(file) {
             }
 
             // Update tracker URL based on platform
-            trackerUrl = `https://r6.tracker.network/r6siege/profile/${platform}/${encodeURIComponent(cleanLine)}/overview`;
+            trackerUrl = `https://r6.tracker.network/r6siege/profile/${platform}/${encodeURIComponent(sanitizedLine)}/overview`;
           }
 
           // Analyze consecutive special characters
@@ -192,17 +240,15 @@ export async function processImage(file) {
           let consecutiveCount = 0;
           let lastSpecialCharIndex = -1;
 
-          for (let i = 0; i < cleanLine.length; i++) {
-            const char = cleanLine[i];
+          for (let i = 0; i < sanitizedLine.length; i++) {
+            const char = sanitizedLine[i];
             
             if (char === '_' || char === '-') {
               // Check if this is a consecutive special character
               if (i === lastSpecialCharIndex + 1) {
                 consecutiveCount++;
-                // Add the character as many times as it appears consecutively
-                for (let j = 0; j < consecutiveCount; j++) {
-                  processedLine += char;
-                }
+                // Add the character for PlayStation and PC (allow consecutive characters for these platforms)
+                processedLine += char;
               } else {
                 consecutiveCount = 1;
                 processedLine += char;
@@ -221,10 +267,14 @@ export async function processImage(file) {
           }
 
           // Check OCR confidence and if the line was cleaned
+          // Set needsEdit to true if the line had a prefix
           const needsEdit = lineAnnotation.confidence < 0.9 || 
-                          processedLine !== cleanLine || 
+                          processedLine !== sanitizedLine || 
+                          sanitizedLine !== cleanLine ||
                           cleanLine !== line || // This will be true if we removed numbers/periods
                           line.includes(' ') || 
+                          hasNumberPrefix ||
+                          hasQuestionMarkPrefix ||
                           /[^a-zA-Z0-9._-]/.test(processedLine);
 
           return {
@@ -235,25 +285,51 @@ export async function processImage(file) {
           };
         }
 
-        // If no bounding box is available, validate against the determined platform
-        /* if (!isValidUsername(cleanLine, platform)) {
-          console.log(`Invalid ${platform} username: ${cleanLine}`);
-          return null;
-        } */
-
-        // Check if name might need editing
-        const needsEdit = cleanLine !== line || // This will be true if we removed numbers/periods
+        // Check if name might need editing - set needsEdit to true if the line had a prefix
+        const needsEdit = sanitizedLine !== cleanLine ||
+                         cleanLine !== line || // This will be true if we removed numbers/periods
                          line.includes(' ') || 
-                         /[^a-zA-Z0-9._-]/.test(cleanLine);
+                         hasNumberPrefix ||
+                         hasQuestionMarkPrefix ||
+                         /[^a-zA-Z0-9._-]/.test(sanitizedLine);
 
         return {
-          name: cleanLine,
+          name: sanitizedLine,
           platform,
           trackerUrl,
           needsEdit
         };
       })
       .filter(Boolean) // Remove null entries (invalid usernames)
+      .filter(player => {
+        // Final validation check - ensure all player names follow platform rules
+        return isValidUsername(player.name, player.platform);
+      })
+      .map(player => {
+        // Platform-specific final cleanup
+        let cleanName = player.name;
+        
+        // Remove characters not allowed on specific platforms
+        if (player.platform === 'xbl') {
+          // Xbox doesn't allow special characters
+          cleanName = cleanName.replace(/[^a-zA-Z0-9 ]/g, '');
+        } else if (player.platform === 'psn') {
+          // PSN only allows underscores and hyphens
+          cleanName = cleanName.replace(/[^a-zA-Z0-9_-]/g, '');
+        } else if (player.platform === 'ubi') {
+          // PC allows periods, underscores, and hyphens
+          cleanName = cleanName.replace(/[^a-zA-Z0-9._-]/g, '');
+        }
+        
+        // Update tracker URL with clean name
+        const trackerUrl = `https://r6.tracker.network/r6siege/profile/${player.platform}/${encodeURIComponent(cleanName)}/overview`;
+        
+        return {
+          ...player,
+          name: cleanName,
+          trackerUrl
+        };
+      })
       .slice(0, 10); // Assuming max 10 players
 
     console.log('Extracted player names:', playerNames);
