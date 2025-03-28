@@ -183,7 +183,7 @@ function Scan() {
           <div className="space-y-4 flex flex-col items-center">
             <button
               onClick={startCamera}
-              className="w-full max-w-md bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors dark:bg-blue-500 dark:hover:bg-blue-600"
+              className="w-full max-w-md bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all transform hover:scale-105 shadow-lg"
             >
               Take Photo
             </button>
