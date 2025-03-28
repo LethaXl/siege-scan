@@ -255,11 +255,25 @@ function Scan() {
                 <span className="font-medium">Try Again</span>
               </button>
             </div>
-            <img
-              src={image}
-              alt="Scoreboard"
-              className="w-[500px] h-[375px] object-contain rounded-lg shadow-lg mx-auto mt-16"
-            />
+            <div className="relative w-full aspect-[4/3] bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-xl shadow-2xl overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 dark:from-blue-400/5 dark:to-purple-400/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="absolute inset-0 border border-gray-200/50 dark:border-gray-700/50 rounded-xl"></div>
+              <img
+                src={image}
+                alt="Scoreboard"
+                className="absolute inset-0 w-full h-full object-contain transition-transform duration-300 group-hover:scale-[1.02]"
+                onLoad={(e) => {
+                  const img = e.target;
+                  const isPortrait = img.naturalHeight > img.naturalWidth;
+                  if (isPortrait) {
+                    img.classList.add('max-h-full', 'w-auto', 'mx-auto');
+                  } else {
+                    img.classList.add('max-w-full', 'h-auto', 'my-auto');
+                  }
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </div>
           </div>
         )}
 
