@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { processImage } from '../services/visionService';
 import PlayerNameEditor from './PlayerNameEditor';
+import { useNavigate } from 'react-router-dom';
 
 function Scan() {
   const [image, setImage] = useState(null);
@@ -13,6 +14,7 @@ function Scan() {
   const [stream, setStream] = useState(null);
   const fileInputRef = useRef(null);
   const videoRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!image) {
@@ -63,6 +65,11 @@ function Scan() {
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
+  };
+
+  const handleTryAgain = () => {
+    handleRemoveImage();
+    navigate('/scan');
   };
 
   const processScoreboard = async (file) => {
@@ -170,42 +177,44 @@ function Scan() {
   };
 
   return (
-    <div className={`max-w-4xl mx-auto h-screen flex items-start justify-center pt-[25vh] ${!image ? 'overflow-hidden' : 'overflow-auto'}`}>
+    <div className={`max-w-4xl mx-auto h-screen flex items-start justify-center ${!image ? 'pt-[25vh]' : 'pt-0'} ${!image ? 'overflow-hidden' : 'overflow-auto'}`}>
       <div className="space-y-6 w-full">
-        <div className="space-y-4 flex flex-col items-center">
-          <button
-            onClick={startCamera}
-            className="w-full max-w-md bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors dark:bg-blue-500 dark:hover:bg-blue-600"
-          >
-            Take Photo
-          </button>
-          
-          <div className="relative w-full max-w-md">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
+        {!image && (
+          <div className="space-y-4 flex flex-col items-center">
+            <button
+              onClick={startCamera}
+              className="w-full max-w-md bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors dark:bg-blue-500 dark:hover:bg-blue-600"
+            >
+              Take Photo
+            </button>
+            
+            <div className="relative w-full max-w-md">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-400">or</span>
+              </div>
             </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-400">or</span>
-            </div>
-          </div>
 
-          <div
-            {...getRootProps()}
-            className={`w-full max-w-md border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors
-              ${isDragActive 
-                ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' 
-                : 'border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400'
-              }`}
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <input {...getInputProps()} ref={fileInputRef} />
-            <p className="text-gray-600 dark:text-gray-300">
-              {isDragActive
-                ? 'Drop the image here'
-                : 'Upload Image'}
-            </p>
+            <div
+              {...getRootProps()}
+              className={`w-full max-w-md border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors
+                ${isDragActive 
+                  ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' 
+                  : 'border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400'
+                }`}
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <input {...getInputProps()} ref={fileInputRef} />
+              <p className="text-gray-600 dark:text-gray-300">
+                {isDragActive
+                  ? 'Drop the image here'
+                  : 'Upload Image'}
+              </p>
+            </div>
           </div>
-        </div>
+        )}
 
         {showCamera && (
           <div className="relative">
@@ -234,20 +243,23 @@ function Scan() {
 
         {image && (
           <div className="relative max-w-xl mx-auto">
+            <div className="flex justify-center mb-4">
+              <button
+                onClick={handleTryAgain}
+                className="flex items-center bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all transform hover:scale-105 shadow-lg"
+                aria-label="Try Again"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
+                </svg>
+                <span className="font-medium">Try Again</span>
+              </button>
+            </div>
             <img
               src={image}
               alt="Scoreboard"
-              className="w-[500px] h-[375px] object-contain rounded-lg shadow-lg mx-auto"
+              className="w-[500px] h-[375px] object-contain rounded-lg shadow-lg mx-auto mt-16"
             />
-            <button
-              onClick={handleRemoveImage}
-              className="absolute top-4 right-4 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-colors"
-              aria-label="Remove image"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-              </svg>
-            </button>
           </div>
         )}
 
