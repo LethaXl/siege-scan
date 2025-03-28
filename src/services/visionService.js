@@ -107,6 +107,9 @@ export async function processImage(file) {
       .split('\n')
       .map(line => line.trim())
       .filter(line => {
+        // For debugging: show all lines before filtering
+        console.log(`Filtering line: "${line}"`);
+
         // Skip empty lines
         if (!line || line.length === 0) return false;
 
@@ -121,7 +124,7 @@ export async function processImage(file) {
         if (line.includes('Team') || line.includes('Round') || line.includes('Match')) return false;
 
         // Skip common game-specific terms
-        const skipTerms = ['ATK','DFF','ATC','ATV', 'A1K','DEC', 'DEB', 'BEF', 'OEF', 'D€F', 'D3F', 'DEF', 'O O','ATTACKER', 'DEFENDER', 'ROUND', 'MATCH', 'TEAM'];
+        const skipTerms = ['ATK','DFF','ATC','ATV', 'A1K','DEC', 'DEB', 'BEF', 'OEF', 'D€F', 'D3F', 'DEF', 'O O','ATTACKER', 'DEFENDER', 'ROUND', 'MATCH', 'TEAM', 'NAVIGATE', 'NAVIGATE WITH'];
         if (skipTerms.some(term => line.toUpperCase().includes(term))) return false;
 
         // Skip single numbers (1-5)
@@ -140,7 +143,34 @@ export async function processImage(file) {
         if (/[+*=&%$#@!;:,<>\\|]/.test(line)) return false;
         
         // Skip lines with non-Latin characters that are likely OCR errors
+        // eslint-disable-next-line no-control-regex
         if (/[^\x00-\x7F]/.test(line)) return false;
+
+        // Skip lines that match patterns like "A 5" or "D 6" (single letter followed by number)
+        if (/^[A-Za-z]\s+\d+$/.test(line)) return false;
+        
+        // Skip lines that match patterns like "A B" (single letter + space + single letter)
+        if (/^[A-Za-z]\s+[A-Za-z]$/.test(line)) return false;
+        
+        // Skip lines that are likely game stats, not usernames
+        if (/^[A-Za-z]\s+\d+\s+\d+$/.test(line)) return false; // Like "K 1 2"
+        
+        // Skip lines with just 2-3 characters that aren't valid usernames
+        if (line.length <= 3 && !/^[a-zA-Z]{3}$/.test(line)) return false;
+
+        // Check for a pattern like "B Razz_354" (single letter followed by space, then valid username)
+        // We'll clean these up in the processing step
+        if (/^[A-Za-z]\s+[A-Za-z]/.test(line)) {
+          // For valid pattern: further check if it contains underscore or hyphen (PSN)
+          if (line.includes('_') || line.includes('-')) {
+            console.log(`Letter-prefixed PSN username detected: "${line}"`);
+            return true;
+          }
+          
+          // Also allow just a single letter prefix with any alphanumeric name (catch Xbox/PC patterns)
+          console.log(`Letter-prefixed username detected: "${line}"`);
+          return true;
+        }
 
         // Allow lines that contain a number followed by a period and name
         if (/^\d+\.\s*[a-zA-Z]/.test(line)) return true;
@@ -159,23 +189,17 @@ export async function processImage(file) {
           annotation.description.includes(line)
         );
 
+        // Initial platform assignment
         let platform = 'psn'; // Default to PSN
-        let trackerUrl = `https://r6.tracker.network/r6siege/profile/psn/${encodeURIComponent(line)}/overview`;
-
-        // First check for platform-specific characters
-        if (line.includes('.')) {
-          platform = 'ubi'; // PC usernames can contain periods
-          trackerUrl = `https://r6.tracker.network/r6siege/profile/ubi/${encodeURIComponent(line)}/overview`;
-        } else if (line.includes(' ')) {
-          platform = 'xbl'; // Xbox usernames can contain spaces
-          trackerUrl = `https://r6.tracker.network/r6siege/profile/xbl/${encodeURIComponent(line)}/overview`;
-        }
 
         // Check if line starts with a number followed by a period and space
         const hasNumberPrefix = /^\d+\.\s+/.test(line);
         
         // Check if line starts with a question mark (OCR error)
         const hasQuestionMarkPrefix = /^\?/.test(line);
+        
+        // Check if line has a single letter prefix followed by a space and a valid username
+        const hasLetterSpacePrefix = /^[A-Za-z]\s+[A-Za-z]/.test(line);
 
         // Clean up the line by removing numbers/periods/question marks at the start
         let cleanLine = line;
@@ -183,11 +207,29 @@ export async function processImage(file) {
             cleanLine = line.replace(/^\d+\.\s*/, '').trim();
         } else if (hasQuestionMarkPrefix) {
             cleanLine = line.replace(/^\?/, '').trim();
+        } else if (hasLetterSpacePrefix) {
+            // Clean patterns like "B Razz_354" to "Razz_354"
+            cleanLine = line.replace(/^[A-Za-z]\s+/, '').trim();
         }
         
         // Further clean the line by removing invalid characters
         // Remove any non-alphanumeric, underscore, period, dash, and space characters
         const sanitizedLine = cleanLine.replace(/[^a-zA-Z0-9._\- ]/g, '').trim();
+
+        // For debugging
+        console.log(`Clean result: "${line}" → "${sanitizedLine}"`);
+
+        // Determine platform based on username characters
+        if (sanitizedLine.includes('.')) {
+            platform = 'ubi';
+        } else if (sanitizedLine.includes('_') || sanitizedLine.includes('-')) {
+            platform = 'psn';
+        } else if (sanitizedLine.includes(' ')) {
+            platform = 'xbl';
+        }
+        
+        // Create tracker URL based on detected platform
+        let trackerUrl = `https://r6.tracker.network/r6siege/profile/${platform}/${encodeURIComponent(sanitizedLine)}/overview`;
 
         // Skip if we don't have a valid username after cleaning
         if (sanitizedLine.length < 3 || !/^[a-zA-Z]/.test(sanitizedLine)) {
@@ -237,7 +279,6 @@ export async function processImage(file) {
 
           // Analyze consecutive special characters
           let processedLine = '';
-          let consecutiveCount = 0;
           let lastSpecialCharIndex = -1;
 
           for (let i = 0; i < sanitizedLine.length; i++) {
@@ -246,16 +287,13 @@ export async function processImage(file) {
             if (char === '_' || char === '-') {
               // Check if this is a consecutive special character
               if (i === lastSpecialCharIndex + 1) {
-                consecutiveCount++;
                 // Add the character for PlayStation and PC (allow consecutive characters for these platforms)
                 processedLine += char;
               } else {
-                consecutiveCount = 1;
                 processedLine += char;
               }
               lastSpecialCharIndex = i;
             } else {
-              consecutiveCount = 0;
               processedLine += char;
             }
           }
@@ -275,6 +313,7 @@ export async function processImage(file) {
                           line.includes(' ') || 
                           hasNumberPrefix ||
                           hasQuestionMarkPrefix ||
+                          hasLetterSpacePrefix ||
                           /[^a-zA-Z0-9._-]/.test(processedLine);
 
           return {
@@ -291,6 +330,7 @@ export async function processImage(file) {
                          line.includes(' ') || 
                          hasNumberPrefix ||
                          hasQuestionMarkPrefix ||
+                         hasLetterSpacePrefix ||
                          /[^a-zA-Z0-9._-]/.test(sanitizedLine);
 
         return {
@@ -322,7 +362,7 @@ export async function processImage(file) {
         }
         
         // Update tracker URL with clean name
-        const trackerUrl = `https://r6.tracker.network/r6siege/profile/${player.platform}/${encodeURIComponent(cleanName)}/overview`;
+        let trackerUrl = `https://r6.tracker.network/r6siege/profile/${player.platform}/${encodeURIComponent(cleanName)}/overview`;
         
         return {
           ...player,
