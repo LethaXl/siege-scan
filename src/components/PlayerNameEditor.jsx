@@ -27,8 +27,8 @@ const PlayerNameEditor = ({ player, onSave, onCancel, onRemove }) => {
         break;
 
       case 'xbl':
-        if (username.length < 3 || username.length > 12) {
-          return 'Xbox Gamertag must be between 3 and 12 characters';
+        if (username.length < 3 || username.length > 15) {
+          return 'Xbox Gamertag must be between 3 and 15 characters';
         }
         if (!/^[a-zA-Z]/.test(username)) {
           return 'Xbox Gamertag must start with a letter';
