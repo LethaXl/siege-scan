@@ -9,115 +9,121 @@ import {
   SunIcon,
   DocumentDuplicateIcon,
   ExclamationTriangleIcon,
-  DevicePhoneMobileIcon
+  ArrowTopRightOnSquareIcon,
+  ChevronUpIcon
 } from '@heroicons/react/24/outline';
-import { Disclosure } from '@headlessui/react';
-import { ChevronUpIcon } from '@heroicons/react/24/outline';
 
 const Guide = () => {
   const faqs = [
     {
       question: "What image formats are supported?",
-      answer: "SiegeScan supports common image formats including JPG and PNG. For best results, we recommend using high-quality screenshots of the Rainbow Six Siege scoreboard."
-    },
-    {
-      question: "What if the scan is inaccurate?",
-      answer: "If you're experiencing inaccurate scans, try the following: 1) Ensure good lighting conditions when taking the photo, 2) Keep your phone steady and avoid motion blur, 3) Make sure the scoreboard is clearly visible, 4) Use a higher resolution image if possible. You can also manually edit any incorrectly scanned usernames."
+      answer: "SiegeScan supports common image formats including JPG and PNG."
     },
     {
       question: "What platforms are supported?",
-      answer: "SiegeScan is primarily optimized for console lobbies (PSN, XBL, Nintendo Switch). While PC lobbies are supported, the scanning accuracy may vary due to different UI layouts and text styles."
-    },
-    {
-      question: "How do I change a player's platform?",
-      answer: "You can tap on the platform logo next to a player's name to quickly switch between platforms (PSN, XBL, Nintendo Switch, PC). This is faster than using the edit button for platform changes."
+      answer: "SiegeScan is primarily optimized for console lobbies (PlayStation, Xbox). While PC lobbies are supported, the scanning accuracy may be inaccurate."
     }
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      {/* Header Section */}
-      <div className="text-center mb-16">
-        <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">How to Use SiegeScan</h1>
-        <p className="text-xl text-gray-600 dark:text-gray-300">Your mobile-optimized tool for scanning Rainbow Six Siege scoreboards</p>
-      </div>
-
-      {/* Mobile Optimization Notice */}
-      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-8">
-        <div className="flex items-center">
-          <DevicePhoneMobileIcon className="h-5 w-5 text-blue-500 mr-2" />
-          <p className="text-blue-700 dark:text-blue-300">
-            SiegeScan is optimized for mobile use, making it perfect for quickly scanning scoreboards from your phone's camera.
-          </p>
-        </div>
-      </div>
-
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-1 pb-12">
       {/* Step-by-Step Tutorial */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
-          <DocumentTextIcon className="h-6 w-6 mr-2 text-blue-500" />
-          Step-by-Step Tutorial
+      <section className="mb-12">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center justify-center">
+          <DocumentTextIcon className="h-5 w-5 mr-2 text-blue-500" />
+          Getting Started
         </h2>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-            <h3 className="text-base font-medium text-gray-900 dark:text-white mb-2">1. Take a Photo</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-300">Use your phone's camera to take a clear photo of the Rainbow Six Siege scoreboard. Make sure all player names are visible.</p>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200">
+            <div className="flex items-center mb-2">
+              <div className="w-6 h-6 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mr-2">
+                <span className="text-blue-600 dark:text-blue-300 text-xs font-semibold">1</span>
+              </div>
+              <h3 className="text-sm font-medium text-gray-900 dark:text-white">Take a Photo</h3>
+            </div>
+            <p className="text-xs text-gray-600 dark:text-gray-300">Use your phone's camera to take a clear photo of the Rainbow Six Siege scoreboard.</p>
           </div>
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-            <h3 className="text-base font-medium text-gray-900 dark:text-white mb-2">2. Upload or Capture</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-300">Choose to upload an existing photo or use the camera directly in the app. The app will automatically detect the scoreboard.</p>
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200">
+            <div className="flex items-center mb-2">
+              <div className="w-6 h-6 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mr-2">
+                <span className="text-blue-600 dark:text-blue-300 text-xs font-semibold">2</span>
+              </div>
+              <h3 className="text-sm font-medium text-gray-900 dark:text-white">Upload or Capture</h3>
+            </div>
+            <p className="text-xs text-gray-600 dark:text-gray-300">Choose to upload an existing photo or use the camera directly in the app.</p>
           </div>
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-            <h3 className="text-base font-medium text-gray-900 dark:text-white mb-2">3. Review & Edit</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-300">Review the scanned usernames. You can edit any incorrect names or tap the platform logo to change platforms.</p>
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200">
+            <div className="flex items-center mb-2">
+              <div className="w-6 h-6 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mr-2">
+                <span className="text-blue-600 dark:text-blue-300 text-xs font-semibold">3</span>
+              </div>
+              <h3 className="text-sm font-medium text-gray-900 dark:text-white">Review & Edit</h3>
+            </div>
+            <p className="text-xs text-gray-600 dark:text-gray-300">Review the scanned usernames and edit any incorrect names.</p>
           </div>
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-            <h3 className="text-base font-medium text-gray-900 dark:text-white mb-2">4. View Stats</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-300">Click on any username to view their detailed Rainbow Six Siege statistics on R6 Tracker.</p>
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200">
+            <div className="flex items-center mb-2">
+              <div className="w-6 h-6 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mr-2">
+                <span className="text-blue-600 dark:text-blue-300 text-xs font-semibold">4</span>
+              </div>
+              <h3 className="text-sm font-medium text-gray-900 dark:text-white">View Stats</h3>
+            </div>
+            <p className="text-xs text-gray-600 dark:text-gray-300">Click on the icon <ArrowTopRightOnSquareIcon className="h-3 w-3 text-gray-600 dark:text-gray-300 inline" /> to view their detailed statistics on R6 Tracker.</p>
           </div>
         </div>
       </section>
 
       {/* Best Practices */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
-          <LightBulbIcon className="h-6 w-6 mr-2 text-yellow-500" />
-          Best Practices
+      <section className="mb-12">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center justify-center">
+          <LightBulbIcon className="h-5 w-5 mr-2 text-yellow-500" />
+          Helpful Tips
         </h2>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-            <SunIcon className="h-6 w-6 text-yellow-500 mb-2" />
-            <h3 className="text-base font-medium text-gray-900 dark:text-white mb-1">Lighting</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-300">Ensure good lighting when taking photos. Avoid glare on your screen and keep the room well-lit.</p>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200">
+            <div className="flex items-center mb-2">
+              <SunIcon className="h-5 w-5 text-yellow-500 mr-2" />
+              <h3 className="text-sm font-medium text-gray-900 dark:text-white">Lighting</h3>
+            </div>
+            <p className="text-xs text-gray-600 dark:text-gray-300">Ensure even lighting and minimize glare for clearer results.</p>
           </div>
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-            <DocumentCheckIcon className="h-6 w-6 text-green-500 mb-2" />
-            <h3 className="text-base font-medium text-gray-900 dark:text-white mb-1">Positioning</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-300">Hold your phone steady and ensure the scoreboard is centered in the frame. Avoid tilted angles.</p>
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200">
+            <div className="flex items-center mb-2">
+              <DocumentCheckIcon className="h-5 w-5 text-green-500 mr-2" />
+              <h3 className="text-sm font-medium text-gray-900 dark:text-white">Positioning</h3>
+            </div>
+            <p className="text-xs text-gray-600 dark:text-gray-300">Keep your phone steady and center the scoreboard in frame.</p>
           </div>
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-            <ArrowUpTrayIcon className="h-6 w-6 text-blue-500 mb-2" />
-            <h3 className="text-base font-medium text-gray-900 dark:text-white mb-1">Resolution</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-300">Use your phone's highest quality camera settings. Higher resolution means better text recognition.</p>
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200">
+            <div className="flex items-center mb-2">
+              <ArrowUpTrayIcon className="h-5 w-5 text-blue-500 mr-2" />
+              <h3 className="text-sm font-medium text-gray-900 dark:text-white">Resolution</h3>
+            </div>
+            <p className="text-xs text-gray-600 dark:text-gray-300">Use highest quality camera settings for better text recognition.</p>
           </div>
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-            <DocumentDuplicateIcon className="h-6 w-6 text-purple-500 mb-2" />
-            <h3 className="text-base font-medium text-gray-900 dark:text-white mb-1">Platform</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-300">Best results for console lobbies. PC lobbies may require manual username entry.</p>
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200">
+            <div className="flex items-center mb-2">
+              <DocumentDuplicateIcon className="h-5 w-5 text-purple-500 mr-2" />
+              <h3 className="text-sm font-medium text-gray-900 dark:text-white">Platform</h3>
+            </div>
+            <p className="text-xs text-gray-600 dark:text-gray-300">Best results for console lobbies. PC may need manual entry/edits.</p>
           </div>
         </div>
       </section>
 
       {/* Example Images Section */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
-          <PhotoIcon className="h-6 w-6 mr-2 text-green-500" />
+      <section className="mb-12">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center justify-center">
+          <PhotoIcon className="h-5 w-5 mr-2 text-green-500" />
           Example Images
         </h2>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-            <h3 className="text-base font-medium text-gray-900 dark:text-white mb-2">Good Example</h3>
-            <div className="aspect-w-16 aspect-h-9 bg-gray-100 dark:bg-gray-700 rounded-lg mb-2 overflow-hidden">
+        <div className="grid grid-cols-2 gap-3">
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200">
+            <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-2 flex items-center">
+              <DocumentCheckIcon className="h-4 w-4 text-green-500 mr-1" />
+              Good Example
+            </h3>
+            <div className="aspect-w-16 aspect-h-9 bg-gray-100 dark:bg-gray-700 rounded-lg mb-3 overflow-hidden">
               <img 
                 src="/guide-images/good-example.jpg" 
                 alt="Good scoreboard scanning example"
@@ -125,8 +131,8 @@ const Guide = () => {
               />
             </div>
             <div className="space-y-1">
-              <p className="text-sm text-gray-600 dark:text-gray-300">This image demonstrates:</p>
-              <ul className="list-disc list-inside text-sm text-gray-600 dark:text-gray-300 space-y-0.5">
+              <p className="text-xs text-gray-600 dark:text-gray-300">This image demonstrates:</p>
+              <ul className="list-disc list-inside text-xs text-gray-600 dark:text-gray-300 space-y-0.5">
                 <li>Clear view of the scoreboard</li>
                 <li>Well-lit screen</li>
                 <li>Steady camera position</li>
@@ -134,12 +140,12 @@ const Guide = () => {
               </ul>
             </div>
           </div>
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-            <h3 className="text-base font-medium text-gray-900 dark:text-white mb-2 flex items-center">
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200">
+            <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-2 flex items-center">
               <ExclamationTriangleIcon className="h-4 w-4 text-red-500 mr-1" />
               Problematic Example
             </h3>
-            <div className="aspect-w-16 aspect-h-9 bg-gray-100 dark:bg-gray-700 rounded-lg mb-2 overflow-hidden">
+            <div className="aspect-w-16 aspect-h-9 bg-gray-100 dark:bg-gray-700 rounded-lg mb-3 overflow-hidden">
               <img 
                 src="/guide-images/bad-example.jpg" 
                 alt="Problematic scoreboard scanning example"
@@ -147,8 +153,8 @@ const Guide = () => {
               />
             </div>
             <div className="space-y-1">
-              <p className="text-sm text-gray-600 dark:text-gray-300">This image shows common issues:</p>
-              <ul className="list-disc list-inside text-sm text-gray-600 dark:text-gray-300 space-y-0.5">
+              <p className="text-xs text-gray-600 dark:text-gray-300">This image shows common issues:</p>
+              <ul className="list-disc list-inside text-xs text-gray-600 dark:text-gray-300 space-y-0.5">
                 <li>Screen glare and reflections</li>
                 <li>Blurry or shaky image</li>
                 <li>Poor lighting conditions</li>
@@ -160,30 +166,44 @@ const Guide = () => {
       </section>
 
       {/* FAQ Section */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
-          <QuestionMarkCircleIcon className="h-6 w-6 mr-2 text-purple-500" />
+      <section className="mb-12">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center justify-center">
+          <QuestionMarkCircleIcon className="h-5 w-5 mr-2 text-purple-500" />
           Frequently Asked Questions
         </h2>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-3">
           {faqs.map((faq, index) => (
-            <Disclosure key={index}>
-              {({ open }) => (
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md">
-                  <Disclosure.Button className="flex w-full justify-between rounded-lg px-3 py-2 text-left text-sm font-medium text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none">
-                    <span>{faq.question}</span>
-                    <ChevronUpIcon
-                      className={`${
-                        open ? 'rotate-180 transform' : ''
-                      } h-4 w-4 text-gray-500`}
-                    />
-                  </Disclosure.Button>
-                  <Disclosure.Panel className="px-3 pb-2 text-xs text-gray-600 dark:text-gray-300">
-                    {faq.answer}
-                  </Disclosure.Panel>
-                </div>
-              )}
-            </Disclosure>
+            <div key={index} className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200">
+              <button
+                onClick={() => {
+                  const buttons = document.querySelectorAll('.faq-button');
+                  const panels = document.querySelectorAll('.faq-panel');
+                  
+                  buttons.forEach((btn, i) => {
+                    if (i === index) {
+                      btn.setAttribute('aria-expanded', btn.getAttribute('aria-expanded') === 'true' ? 'false' : 'true');
+                      panels[i].style.display = panels[i].style.display === 'none' ? 'block' : 'none';
+                    } else {
+                      btn.setAttribute('aria-expanded', 'false');
+                      panels[i].style.display = 'none';
+                    }
+                  });
+                }}
+                className="faq-button flex w-full justify-between rounded-lg px-3 py-2 text-left text-xs font-medium text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none"
+                aria-expanded="false"
+              >
+                <span>{faq.question}</span>
+                <ChevronUpIcon
+                  className="h-3 w-3 text-gray-500 transform transition-transform duration-200"
+                  style={{
+                    transform: 'rotate(0deg)'
+                  }}
+                />
+              </button>
+              <div className="faq-panel px-3 pb-2 text-xs text-gray-600 dark:text-gray-300" style={{ display: 'none' }}>
+                {faq.answer}
+              </div>
+            </div>
           ))}
         </div>
       </section>
