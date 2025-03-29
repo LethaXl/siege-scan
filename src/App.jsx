@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import PageTransition from './components/PageTransition';
 import { ScanProvider } from './context/ScanContext';
@@ -31,42 +31,54 @@ const Header = () => (
   </header>
 );
 
+// Main content wrapper that controls scrolling based on route
+const MainContent = ({ children }) => {
+  const location = useLocation();
+  const isHome = location.pathname === '/';
+  
+  return (
+    <main className={`container mx-auto px-4 ${isHome ? 'h-[calc(100vh-8rem)] overflow-hidden' : 'py-8 pb-20'}`}>
+      <Suspense fallback={<LoadingSpinner />}>
+        {children}
+      </Suspense>
+    </main>
+  );
+};
+
 function App() {
   return (
     <Router>
       <ScanProvider>
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
           <Header />
-          <main className="container mx-auto px-4 py-8 pb-20">
-            <Suspense fallback={<LoadingSpinner />}>
-              <Routes>
-                <Route
-                  path="/"
-                  element={
-                    <PageTransition>
-                      <Home />
-                    </PageTransition>
-                  }
-                />
-                <Route
-                  path="/scan"
-                  element={
-                    <PageTransition>
-                      <Scan />
-                    </PageTransition>
-                  }
-                />
-                <Route
-                  path="/guide"
-                  element={
-                    <PageTransition>
-                      <Guide />
-                    </PageTransition>
-                  }
-                />
-              </Routes>
-            </Suspense>
-          </main>
+          <MainContent>
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <PageTransition>
+                    <Home />
+                  </PageTransition>
+                }
+              />
+              <Route
+                path="/scan"
+                element={
+                  <PageTransition>
+                    <Scan />
+                  </PageTransition>
+                }
+              />
+              <Route
+                path="/guide"
+                element={
+                  <PageTransition>
+                    <Guide />
+                  </PageTransition>
+                }
+              />
+            </Routes>
+          </MainContent>
           <Navbar />
         </div>
       </ScanProvider>

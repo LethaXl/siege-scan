@@ -2,9 +2,19 @@ import React from 'react';
 
 const Home = () => {
   return (
-    <div className="h-[calc(100vh-4rem)] flex flex-col items-center justify-center px-4">
+    <div className="min-h-[calc(100vh-4rem)] flex flex-col items-center px-4 pt-8 overflow-hidden">
       {/* Main Content Container */}
-      <div className="w-full max-w-4xl flex flex-col items-center">
+      <div className="w-full max-w-4xl flex flex-col items-center space-y-8">
+        {/* Description */}
+        <div className="text-center space-y-2 mb-4">
+          <p className="text-lg md:text-xl text-gray-700 dark:text-gray-200">
+            Scan your Rainbow Six Siege scoreboard to instantly get player profile links.
+          </p>
+          <p className="text-sm md:text-base text-gray-500 dark:text-gray-400">
+            Optimized for console lobbies and mobile devices.
+          </p>
+        </div>
+
         {/* Feature Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
           <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
