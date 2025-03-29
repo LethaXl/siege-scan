@@ -1,35 +1,54 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
+  const location = useLocation();
+
+  const isActive = (path) => {
+    return location.pathname === path;
+  };
+
   return (
-    <nav className="bg-white dark:bg-gray-800 shadow-md">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center h-16">
-          <Link to="/" className="text-xl font-bold text-gray-900 dark:text-white">
-            SiegeScan
-          </Link>
-          <div className="flex space-x-4">
+    <nav className="bg-white dark:bg-gray-900 fixed w-full z-20 bottom-0 start-0 border-t border-gray-200 dark:border-gray-600">
+      <div className="max-w-screen-xl mx-auto">
+        <ul className="flex flex-row justify-around p-2 font-medium border-0 bg-transparent">
+          <li>
             <Link
               to="/"
-              className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              className={`flex flex-col items-center py-2 px-3 rounded-sm ${
+                isActive('/')
+                  ? 'text-blue-700 dark:text-blue-500'
+                  : 'text-gray-900 hover:text-blue-700 dark:text-white dark:hover:text-blue-500'
+              }`}
             >
-              Home
+              <span className="text-sm">Home</span>
             </Link>
+          </li>
+          <li>
             <Link
               to="/scan"
-              className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              className={`flex flex-col items-center py-2 px-3 rounded-sm ${
+                isActive('/scan')
+                  ? 'text-blue-700 dark:text-blue-500'
+                  : 'text-gray-900 hover:text-blue-700 dark:text-white dark:hover:text-blue-500'
+              }`}
             >
-              Scan
+              <span className="text-sm">Scan</span>
             </Link>
+          </li>
+          <li>
             <Link
               to="/guide"
-              className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              className={`flex flex-col items-center py-2 px-3 rounded-sm ${
+                isActive('/guide')
+                  ? 'text-blue-700 dark:text-blue-500'
+                  : 'text-gray-900 hover:text-blue-700 dark:text-white dark:hover:text-blue-500'
+              }`}
             >
-              Guide
+              <span className="text-sm">Guide</span>
             </Link>
-          </div>
-        </div>
+          </li>
+        </ul>
       </div>
     </nav>
   );
