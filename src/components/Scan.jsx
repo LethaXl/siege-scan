@@ -1,18 +1,31 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { processImage } from '../services/visionService';
 import PlayerNameEditor from './PlayerNameEditor';
 import { useNavigate } from 'react-router-dom';
+import { useScan } from '../context/ScanContext';
 
 function Scan() {
-  const [image, setImage] = useState(null);
-  const [players, setPlayers] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [editingPlayer, setEditingPlayer] = useState(null);
-  const [showCamera, setShowCamera] = useState(false);
-  const [stream, setStream] = useState(null);
-  const [flippingIcons, setFlippingIcons] = useState(new Set());
+  const {
+    image,
+    setImage,
+    players,
+    setPlayers,
+    isLoading,
+    setIsLoading,
+    error,
+    setError,
+    editingPlayer,
+    setEditingPlayer,
+    showCamera,
+    setShowCamera,
+    stream,
+    setStream,
+    flippingIcons,
+    setFlippingIcons,
+    resetScan
+  } = useScan();
+
   const fileInputRef = useRef(null);
   const videoRef = useRef(null);
   const navigate = useNavigate();
@@ -60,9 +73,7 @@ function Scan() {
   });
 
   const handleRemoveImage = () => {
-    setImage(null);
-    setPlayers([]);
-    setError(null);
+    resetScan();
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
