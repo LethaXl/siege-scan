@@ -205,7 +205,7 @@ function Scan() {
   };
 
   return (
-    <div className={`max-w-4xl mx-auto h-screen flex items-start justify-center ${!image ? 'pt-[25vh]' : 'pt-0'} ${!image ? 'overflow-hidden' : 'overflow-auto'}`}>
+    <div className={`max-w-4xl mx-auto ${!image ? 'pt-[25vh]' : 'pt-0'}`}>
       <div className="space-y-6 w-full">
         {!image && (
           <div className="space-y-4 flex flex-col items-center">
