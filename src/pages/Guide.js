@@ -8,7 +8,6 @@ import {
   DocumentCheckIcon,
   SunIcon,
   DocumentDuplicateIcon,
-  ExclamationTriangleIcon,
   ArrowTopRightOnSquareIcon,
   ChevronUpIcon
 } from '@heroicons/react/24/outline';
@@ -115,51 +114,27 @@ const Guide = () => {
       <section className="mb-12">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center justify-center">
           <PhotoIcon className="h-5 w-5 mr-2 text-green-500" />
-          Example Images
+          Example Image
         </h2>
         <div className="grid grid-cols-2 gap-3">
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200">
-            <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-2 flex items-center">
-              <DocumentCheckIcon className="h-4 w-4 text-green-500 mr-1" />
-              Good Example
-            </h3>
-            <div className="aspect-w-16 aspect-h-9 bg-gray-100 dark:bg-gray-700 rounded-lg mb-3 overflow-hidden">
-              <img 
-                src="/guide-images/good-example.jpg" 
-                alt="Good scoreboard scanning example"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div className="space-y-1">
-              <p className="text-xs text-gray-600 dark:text-gray-300">This image demonstrates:</p>
-              <ul className="list-disc list-inside text-xs text-gray-600 dark:text-gray-300 space-y-0.5">
-                <li>Clear view of the scoreboard</li>
-                <li>Well-lit screen</li>
-                <li>Steady camera position</li>
-                <li>No screen glare</li>
-              </ul>
-            </div>
-          </div>
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200">
-            <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-2 flex items-center">
-              <ExclamationTriangleIcon className="h-4 w-4 text-red-500 mr-1" />
-              Problematic Example
-            </h3>
-            <div className="aspect-w-16 aspect-h-9 bg-gray-100 dark:bg-gray-700 rounded-lg mb-3 overflow-hidden">
-              <img 
-                src="/guide-images/bad-example.jpg" 
-                alt="Problematic scoreboard scanning example"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div className="space-y-1">
-              <p className="text-xs text-gray-600 dark:text-gray-300">This image shows common issues:</p>
-              <ul className="list-disc list-inside text-xs text-gray-600 dark:text-gray-300 space-y-0.5">
-                <li>Screen glare and reflections</li>
-                <li>Blurry or shaky image</li>
-                <li>Poor lighting conditions</li>
-                <li>Tilted or off-center scoreboard</li>
-              </ul>
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 col-span-2">
+            <div className="max-w-lg mx-auto">
+              <div className="aspect-w-16 aspect-h-9 bg-gray-100 dark:bg-gray-700 rounded-lg mb-3 overflow-hidden">
+                <img 
+                  src="/example.jpg" 
+                  alt="Good scoreboard scanning example"
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <div className="space-y-1">
+                <p className="text-xs text-gray-600 dark:text-gray-300">This image demonstrates:</p>
+                <ul className="list-disc list-inside text-xs text-gray-600 dark:text-gray-300 space-y-0.5">
+                  <li>Clear view of the scoreboard</li>
+                  <li>Well-lit screen</li>
+                  <li>Steady camera position</li>
+                  <li>No screen glare</li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
