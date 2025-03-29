@@ -216,10 +216,10 @@ function Scan() {
   };
 
   return (
-    <div className={`max-w-4xl mx-auto ${!image ? 'pt-[25vh]' : 'pt-0'}`}>
-      <div className="space-y-6 w-full">
+    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center">
+      <div className="w-full max-w-4xl px-4 mt-16">
         {!image && (
-          <div className="space-y-4 flex flex-col items-center">
+          <div className="flex flex-col items-center gap-4">
             <button
               onClick={startCamera}
               className="w-full max-w-md bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all transform hover:scale-105 shadow-lg"
