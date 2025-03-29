@@ -216,41 +216,43 @@ function Scan() {
   };
 
   return (
-    <div className={`max-w-4xl mx-auto ${!image ? 'pt-[25vh]' : 'pt-0'}`}>
+    <div className={`max-w-4xl mx-auto ${!image ? 'pt-[25vh] landscape:pt-2' : 'pt-0'}`}>
       <div className="space-y-6 w-full">
         {!image && (
-          <div className="space-y-4 flex flex-col items-center">
-            <button
-              onClick={startCamera}
-              className="w-full max-w-md bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all transform hover:scale-105 shadow-lg"
-            >
-              Take Photo
-            </button>
-            
-            <div className="relative w-full max-w-md">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
+          <div className="space-y-4 flex flex-col items-center landscape:items-center landscape:justify-start">
+            <div className="w-full max-w-md landscape:max-w-lg landscape:px-4">
+              <button
+                onClick={startCamera}
+                className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all transform hover:scale-105 shadow-lg"
+              >
+                Take Photo
+              </button>
+              
+              <div className="relative w-full my-4">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-400">or</span>
+                </div>
               </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-400">or</span>
-              </div>
-            </div>
 
-            <div
-              {...getRootProps()}
-              className={`w-full max-w-md border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors
-                ${isDragActive 
-                  ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' 
-                  : 'border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400'
-                }`}
-              onClick={() => fileInputRef.current?.click()}
-            >
-              <input {...getInputProps()} ref={fileInputRef} />
-              <p className="text-gray-600 dark:text-gray-300">
-                {isDragActive
-                  ? 'Drop the image here'
-                  : 'Upload Image'}
-              </p>
+              <div
+                {...getRootProps()}
+                className={`w-full border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors
+                  ${isDragActive 
+                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' 
+                    : 'border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400'
+                  }`}
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <input {...getInputProps()} ref={fileInputRef} />
+                <p className="text-gray-600 dark:text-gray-300">
+                  {isDragActive
+                    ? 'Drop the image here'
+                    : 'Upload Image'}
+                </p>
+              </div>
             </div>
           </div>
         )}
