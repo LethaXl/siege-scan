@@ -12,6 +12,7 @@ function Scan() {
   const [editingPlayer, setEditingPlayer] = useState(null);
   const [showCamera, setShowCamera] = useState(false);
   const [stream, setStream] = useState(null);
+  const [flippingIcons, setFlippingIcons] = useState(new Set());
   const fileInputRef = useRef(null);
   const videoRef = useRef(null);
   const navigate = useNavigate();
@@ -176,6 +177,33 @@ function Scan() {
     setEditingPlayer(null);
   };
 
+  const handlePlatformChange = (player) => {
+    const platforms = ['psn', 'xbl', 'ubi'];
+    const currentIndex = platforms.indexOf(player.platform);
+    const nextIndex = (currentIndex + 1) % platforms.length;
+    const newPlatform = platforms[nextIndex];
+    
+    // Add the player to flipping icons set
+    setFlippingIcons(prev => new Set([...prev, player.name]));
+    
+    // Update the platform after animation
+    setTimeout(() => {
+      setPlayers(prev => prev.map(p => 
+        p === player ? {
+          ...p,
+          platform: newPlatform,
+          trackerUrl: `https://r6.tracker.network/r6siege/profile/${newPlatform}/${encodeURIComponent(p.name)}/overview`
+        } : p
+      ));
+      // Remove from flipping icons set
+      setFlippingIcons(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(player.name);
+        return newSet;
+      });
+    }, 300); // Half of the animation duration
+  };
+
   return (
     <div className={`max-w-4xl mx-auto h-screen flex items-start justify-center ${!image ? 'pt-[25vh]' : 'pt-0'} ${!image ? 'overflow-hidden' : 'overflow-auto'}`}>
       <div className="space-y-6 w-full">
@@ -302,15 +330,24 @@ function Scan() {
                   {players.map((player, index) => (
                     <div key={index} className="flex items-center justify-between px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700">
                       <div className="flex items-center space-x-3">
-                        <img
-                          src={getPlatformIcon(player.platform)}
-                          alt={player.platform || 'PSN'}
-                          className={getPlatformIconSize(player.platform)}
-                          onError={(e) => {
-                            console.error('Failed to load platform icon:', player.platform);
-                            e.target.src = '/psn.png';
-                          }}
-                        />
+                        <div 
+                          className="relative cursor-pointer"
+                          onClick={() => handlePlatformChange(player)}
+                        >
+                          <div className="relative w-5 h-5 [perspective:1000px]">
+                            <div className={`absolute inset-0 [transform-style:preserve-3d] [transition:transform_0.6s] ${flippingIcons.has(player.name) ? '[transform:rotateY(180deg)]' : '[transform:rotateY(0deg)]'}`}>
+                              <img
+                                src={getPlatformIcon(player.platform)}
+                                alt={player.platform || 'PSN'}
+                                className={`${getPlatformIconSize(player.platform)} [backface-visibility:hidden]`}
+                                onError={(e) => {
+                                  console.error('Failed to load platform icon:', player.platform);
+                                  e.target.src = '/psn.png';
+                                }}
+                              />
+                            </div>
+                          </div>
+                        </div>
                         <span className="text-gray-900 dark:text-white">{player.name}</span>
                         {player.needsEdit && (
                           <div className="group relative">
