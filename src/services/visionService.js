@@ -75,7 +75,6 @@ export async function processImage(file) {
     };
 
     console.log('Making API request to Google Cloud Vision...');
-    console.log('API Key:', process.env.REACT_APP_GOOGLE_CLOUD_VISION_API_KEY ? 'Present' : 'Missing');
 
     // Make the API request with API key
     const response = await axios.post(
@@ -83,7 +82,8 @@ export async function processImage(file) {
       requestBody
     );
 
-    console.log('API Response:', response.data);
+    // Only log non-sensitive information
+    console.log('API Response received');
 
     if (!response.data.responses || !response.data.responses[0]) {
       throw new Error('Invalid response format from Vision API');
