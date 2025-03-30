@@ -17,10 +17,6 @@ function Scan() {
     setError,
     editingPlayer,
     setEditingPlayer,
-    showCamera,
-    setShowCamera,
-    stream,
-    setStream,
     flippingIcons,
     setFlippingIcons,
     resetScan
@@ -28,7 +24,7 @@ function Scan() {
 
   const [showAlert, setShowAlert] = useState(true);
   const fileInputRef = useRef(null);
-  const videoRef = useRef(null);
+  const cameraInputRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -42,26 +38,38 @@ function Scan() {
     };
   }, [image]);
 
-  const onDrop = (acceptedFiles) => {
-    const file = acceptedFiles[0];
-    if (file) {
-      // Validate file size (max 10MB)
-      if (file.size > 10 * 1024 * 1024) {
-        setError('Image is too large. Please upload an image smaller than 10MB.');
-        return;
-      }
-
-      // Validate file type
-      if (!file.type.startsWith('image/')) {
-        setError('Please upload a valid image file.');
-        return;
-      }
-
-      setImage(URL.createObjectURL(file));
-      setPlayers([]);
-      setError(null);
-      processScoreboard(file);
+  // Check for camera support when component mounts
+  useEffect(() => {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      console.warn('Camera API is not supported in this browser');
+    } else {
+      console.log('Camera API is supported');
     }
+  }, []);
+
+  const onDrop = (acceptedFiles) => {
+    processFile(acceptedFiles[0]);
+  };
+
+  const processFile = (file) => {
+    if (!file) return;
+    
+    // Validate file size (max 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      setError('Image is too large. Please upload an image smaller than 10MB.');
+      return;
+    }
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      setError('Please upload a valid image file.');
+      return;
+    }
+
+    setImage(URL.createObjectURL(file));
+    setPlayers([]);
+    setError(null);
+    processScoreboard(file);
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -77,6 +85,9 @@ function Scan() {
     resetScan();
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
+    }
+    if (cameraInputRef.current) {
+      cameraInputRef.current.value = '';
     }
   };
 
@@ -99,6 +110,13 @@ function Scan() {
     }
   };
 
+  const handleCameraCapture = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      processFile(file);
+    }
+  };
+
   const handleEditPlayer = (player) => {
     setEditingPlayer(player);
   };
@@ -114,52 +132,6 @@ function Scan() {
 
   const handleCancelEdit = () => {
     setEditingPlayer(null);
-  };
-
-  const startCamera = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        video: { facingMode: 'environment' } 
-      });
-      videoRef.current.srcObject = stream;
-      setStream(stream);
-      setShowCamera(true);
-    } catch (err) {
-      setError('Could not access camera. Please try uploading an image instead.');
-      console.error('Camera error:', err);
-    }
-  };
-
-  const stopCamera = () => {
-    if (stream) {
-      stream.getTracks().forEach(track => track.stop());
-      setStream(null);
-    }
-    setShowCamera(false);
-  };
-
-  const captureImage = () => {
-    const canvas = document.createElement('canvas');
-    canvas.width = videoRef.current.videoWidth;
-    canvas.height = videoRef.current.videoHeight;
-    canvas.getContext('2d').drawImage(videoRef.current, 0, 0);
-    
-    canvas.toBlob(blob => {
-      const file = new File([blob], 'capture.jpg', { type: 'image/jpeg' });
-      setImage(URL.createObjectURL(file));
-      setPlayers([]);
-      setError(null);
-      processScoreboard(file);
-      stopCamera();
-    }, 'image/jpeg');
-  };
-
-  const handleAddPlayer = () => {
-    setEditingPlayer({
-      name: '',
-      platform: 'psn',
-      trackerUrl: ''
-    });
   };
 
   const getPlatformIcon = (platform) => {
@@ -246,11 +218,19 @@ function Scan() {
             )}
             <div className="w-full max-w-md landscape:max-w-lg landscape:px-4">
               <button
-                onClick={startCamera}
+                onClick={() => cameraInputRef.current?.click()}
                 className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all transform hover:scale-105 shadow-lg"
               >
                 Take Photo
               </button>
+              <input
+                type="file"
+                accept="image/*"
+                capture="environment"
+                ref={cameraInputRef}
+                onChange={handleCameraCapture}
+                className="hidden"
+              />
               
               <div className="relative w-full my-4">
                 <div className="absolute inset-0 flex items-center">
@@ -270,38 +250,18 @@ function Scan() {
                   }`}
                 onClick={() => fileInputRef.current?.click()}
               >
-                <input {...getInputProps()} ref={fileInputRef} />
+                <input 
+                  {...getInputProps()} 
+                  ref={fileInputRef}
+                  accept="image/*"
+                  capture=""
+                />
                 <p className="text-gray-600 dark:text-gray-300">
                   {isDragActive
                     ? 'Drop the image here'
                     : 'Upload Image'}
                 </p>
               </div>
-            </div>
-          </div>
-        )}
-
-        {showCamera && (
-          <div className="relative">
-            <video
-              ref={videoRef}
-              autoPlay
-              playsInline
-              className="w-full rounded-lg"
-            />
-            <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-4">
-              <button
-                onClick={stopCamera}
-                className="bg-red-600 text-white px-6 py-2 rounded-full hover:bg-red-700 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={captureImage}
-                className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition-colors"
-              >
-                Capture
-              </button>
             </div>
           </div>
         )}
@@ -434,7 +394,11 @@ function Scan() {
                 <div className="p-3 border-t border-gray-200 dark:border-gray-700">
                   <div className="flex justify-center">
                     <button
-                      onClick={handleAddPlayer}
+                      onClick={() => setEditingPlayer({
+                        name: '',
+                        platform: 'psn',
+                        trackerUrl: ''
+                      })}
                       className="inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors dark:bg-blue-500 dark:hover:bg-blue-600"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -452,7 +416,11 @@ function Scan() {
         {!players.length && image && (
           <div className="text-center">
             <button
-              onClick={handleAddPlayer}
+              onClick={() => setEditingPlayer({
+                name: '',
+                platform: 'psn',
+                trackerUrl: ''
+              })}
               className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors dark:bg-blue-500 dark:hover:bg-blue-600"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">

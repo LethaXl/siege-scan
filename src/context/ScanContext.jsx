@@ -8,8 +8,6 @@ export function ScanProvider({ children }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [editingPlayer, setEditingPlayer] = useState(null);
-  const [showCamera, setShowCamera] = useState(false);
-  const [stream, setStream] = useState(null);
   const [flippingIcons, setFlippingIcons] = useState(new Set());
 
   const value = {
@@ -23,10 +21,6 @@ export function ScanProvider({ children }) {
     setError,
     editingPlayer,
     setEditingPlayer,
-    showCamera,
-    setShowCamera,
-    stream,
-    setStream,
     flippingIcons,
     setFlippingIcons,
     resetScan: () => {
@@ -34,11 +28,6 @@ export function ScanProvider({ children }) {
       setPlayers([]);
       setError(null);
       setEditingPlayer(null);
-      setShowCamera(false);
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop());
-        setStream(null);
-      }
       setFlippingIcons(new Set());
     }
   };

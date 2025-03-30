@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 function LogoDetection() {
@@ -6,32 +6,42 @@ function LogoDetection() {
   const [detectedPlatform, setDetectedPlatform] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [showCamera, setShowCamera] = useState(false);
-  const [stream, setStream] = useState(null);
   const fileInputRef = useRef(null);
-  const videoRef = useRef(null);
+  const cameraInputRef = useRef(null);
+
+  // Check for camera support
+  useEffect(() => {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      console.warn('Camera API is not supported in this browser');
+    } else {
+      console.log('Logo Detection: Camera API is supported');
+    }
+  }, []);
 
   // Handle file drop/upload
   const onDrop = (acceptedFiles) => {
-    const file = acceptedFiles[0];
-    if (file) {
-      // Validate file size (max 10MB)
-      if (file.size > 10 * 1024 * 1024) {
-        setError('Image is too large. Please upload an image smaller than 10MB.');
-        return;
-      }
+    processFile(acceptedFiles[0]);
+  };
 
-      // Validate file type
-      if (!file.type.startsWith('image/')) {
-        setError('Please upload a valid image file.');
-        return;
-      }
-
-      setImage(URL.createObjectURL(file));
-      setDetectedPlatform(null);
-      setError(null);
-      detectPlatform(file);
+  const processFile = (file) => {
+    if (!file) return;
+    
+    // Validate file size (max 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      setError('Image is too large. Please upload an image smaller than 10MB.');
+      return;
     }
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      setError('Please upload a valid image file.');
+      return;
+    }
+
+    setImage(URL.createObjectURL(file));
+    setDetectedPlatform(null);
+    setError(null);
+    detectPlatform(file);
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -49,6 +59,9 @@ function LogoDetection() {
     setError(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
+    }
+    if (cameraInputRef.current) {
+      cameraInputRef.current.value = '';
     }
   };
 
@@ -76,43 +89,11 @@ function LogoDetection() {
     }
   };
 
-  // Camera functionality
-  const startCamera = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        video: { facingMode: 'environment' } 
-      });
-      videoRef.current.srcObject = stream;
-      setStream(stream);
-      setShowCamera(true);
-    } catch (err) {
-      setError('Camera access denied. Please allow camera permissions in your browser settings or try uploading an image instead.');
-      console.error('Camera error:', err);
+  const handleCameraCapture = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      processFile(file);
     }
-  };
-
-  const stopCamera = () => {
-    if (stream) {
-      stream.getTracks().forEach(track => track.stop());
-      setStream(null);
-    }
-    setShowCamera(false);
-  };
-
-  const captureImage = () => {
-    const canvas = document.createElement('canvas');
-    canvas.width = videoRef.current.videoWidth;
-    canvas.height = videoRef.current.videoHeight;
-    canvas.getContext('2d').drawImage(videoRef.current, 0, 0);
-    
-    canvas.toBlob(blob => {
-      const file = new File([blob], 'capture.jpg', { type: 'image/jpeg' });
-      setImage(URL.createObjectURL(file));
-      setDetectedPlatform(null);
-      setError(null);
-      detectPlatform(file);
-      stopCamera();
-    }, 'image/jpeg');
   };
 
   // Display platform logo and name
@@ -165,11 +146,19 @@ function LogoDetection() {
         {!image ? (
           <div className="space-y-4">
             <button
-              onClick={startCamera}
+              onClick={() => cameraInputRef.current?.click()}
               className="w-full text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-base py-4 text-center transition-colors"
             >
               Take Photo
             </button>
+            <input
+              type="file"
+              accept="image/*"
+              capture="environment"
+              ref={cameraInputRef}
+              onChange={handleCameraCapture}
+              className="hidden"
+            />
             
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
@@ -189,7 +178,12 @@ function LogoDetection() {
                 }`}
               onClick={() => fileInputRef.current?.click()}
             >
-              <input {...getInputProps()} ref={fileInputRef} />
+              <input 
+                {...getInputProps()} 
+                ref={fileInputRef}
+                accept="image/*"
+                capture=""
+              />
               <p className="text-gray-600 dark:text-gray-300 text-base">
                 {isDragActive
                   ? 'Drop the image here'
@@ -205,31 +199,6 @@ function LogoDetection() {
             >
               New Image
             </button>
-          </div>
-        )}
-
-        {showCamera && (
-          <div className="relative">
-            <video
-              ref={videoRef}
-              autoPlay
-              playsInline
-              className="w-full rounded-lg"
-            />
-            <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-4">
-              <button
-                onClick={stopCamera}
-                className="bg-gradient-to-r from-red-500 via-red-600 to-red-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 text-white font-medium rounded-full text-sm px-6 py-2 text-center transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={captureImage}
-                className="bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 text-white font-medium rounded-full text-sm px-6 py-2 text-center transition-colors"
-              >
-                Capture
-              </button>
-            </div>
           </div>
         )}
 
