@@ -251,10 +251,11 @@ function Scan() {
                 onClick={() => fileInputRef.current?.click()}
               >
                 <input 
-                  {...getInputProps()} 
                   ref={fileInputRef}
+                  type="file"
                   accept="image/*"
-                  capture=""
+                  onChange={handleCameraCapture}
+                  className="hidden"
                 />
                 <p className="text-gray-600 dark:text-gray-300">
                   {isDragActive
