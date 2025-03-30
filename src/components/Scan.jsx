@@ -189,7 +189,7 @@ function Scan() {
   };
 
   return (
-    <div className={`max-w-4xl mx-auto ${!image ? 'min-h-[calc(100vh-8rem)] flex flex-col justify-center items-center landscape:justify-start landscape:mt-12' : 'pt-0'}`}>
+    <div className={`max-w-4xl mx-auto ${!image ? 'min-h-[calc(100vh-8rem)] flex flex-col justify-center items-center portrait:justify-start portrait:mt-[15vh] landscape:justify-start landscape:mt-12' : 'pt-0'}`}>
       {!image && showAlert && (
         <div className="fixed top-20 z-30 left-1/2 transform -translate-x-1/2 w-auto">
           <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg px-3 py-2 relative whitespace-nowrap">
@@ -214,7 +214,7 @@ function Scan() {
         </div>
       )}
       
-      <div className="space-y-6 w-full landscape:space-y-2 mt-8 portrait:mt-16">
+      <div className="space-y-6 w-full landscape:space-y-2 mt-8 portrait:mt-6">
         {!image && (
           <div className="space-y-4 landscape:space-y-1 flex flex-col items-center landscape:items-center">
             <div className="w-full max-w-md landscape:max-w-lg landscape:px-4 landscape:flex landscape:gap-2 landscape:items-center">

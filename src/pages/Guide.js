@@ -25,7 +25,7 @@ const Guide = () => {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-1 pb-12">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-1 pb-0">
       {/* Step-by-Step Tutorial */}
       <section className="mb-12">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center justify-center">
@@ -123,7 +123,7 @@ const Guide = () => {
                 <img 
                   src="/example.jpg" 
                   alt="Good scoreboard scanning example"
-                  className="w-full h-full object-contain"
+                  className="w-full h-full object-contain max-h-[200px]"
                 />
               </div>
               <div className="space-y-1">
@@ -141,7 +141,7 @@ const Guide = () => {
       </section>
 
       {/* FAQ Section */}
-      <section className="mb-12">
+      <section className="mb-0">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center justify-center">
           <QuestionMarkCircleIcon className="h-5 w-5 mr-2 text-purple-500" />
           Frequently Asked Questions
@@ -154,15 +154,15 @@ const Guide = () => {
                   const buttons = document.querySelectorAll('.faq-button');
                   const panels = document.querySelectorAll('.faq-panel');
                   
-                  buttons.forEach((btn, i) => {
-                    if (i === index) {
-                      btn.setAttribute('aria-expanded', btn.getAttribute('aria-expanded') === 'true' ? 'false' : 'true');
-                      panels[i].style.display = panels[i].style.display === 'none' ? 'block' : 'none';
-                    } else {
-                      btn.setAttribute('aria-expanded', 'false');
-                      panels[i].style.display = 'none';
-                    }
-                  });
+                  // Toggle only the current FAQ without affecting others
+                  const currentButton = buttons[index];
+                  const currentPanel = panels[index];
+                  
+                  currentButton.setAttribute('aria-expanded', 
+                    currentButton.getAttribute('aria-expanded') === 'true' ? 'false' : 'true'
+                  );
+                  
+                  currentPanel.style.display = currentPanel.style.display === 'none' ? 'block' : 'none';
                 }}
                 className="faq-button flex w-full justify-between rounded-lg px-3 py-2 text-left text-xs font-medium text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none"
                 aria-expanded="false"
