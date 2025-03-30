@@ -2,7 +2,7 @@ import React from 'react';
 
 const Home = () => {
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex flex-col items-center px-4 pt-8 overflow-hidden">
+    <div className="min-h-[calc(100vh-4rem)] flex flex-col items-center px-4 pt-8 pb-20">
       {/* Main Content Container */}
       <div className="w-full max-w-4xl flex flex-col items-center space-y-8">
         {/* Description */}

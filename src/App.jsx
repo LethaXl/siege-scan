@@ -39,7 +39,7 @@ const MainContent = ({ children }) => {
   const isHome = location.pathname === '/';
   
   return (
-    <main className={`container mx-auto px-4 ${isHome ? 'h-[calc(100vh-8rem)] overflow-hidden' : 'py-8 pb-20'}`}>
+    <main className={`container mx-auto px-4 ${isHome ? 'min-h-[calc(100vh-8rem)]' : 'py-8 pb-20'}`}>
       <Suspense fallback={<LoadingSpinner />}>
         {children}
       </Suspense>
