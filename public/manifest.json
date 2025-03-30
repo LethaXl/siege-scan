@@ -1,0 +1,15 @@
+{
+  "short_name": "SiegeScan",
+  "name": "SiegeScan - R6 Scoreboard Scanner",
+  "icons": [
+    {
+      "src": "favicon3.PNG",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/png"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#111827",
+  "background_color": "#111827"
+} 
