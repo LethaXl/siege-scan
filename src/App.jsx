@@ -1,5 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import Navbar from './components/Navbar';
 import PageTransition from './components/PageTransition';
 import { ScanProvider } from './context/ScanContext';
@@ -80,6 +82,8 @@ function App() {
             </Routes>
           </MainContent>
           <Navbar />
+          <Analytics />
+          <SpeedInsights />
         </div>
       </ScanProvider>
     </Router>
