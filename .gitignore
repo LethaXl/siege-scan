@@ -29,10 +29,9 @@ dist-ssr
 .env.*.local
 
 # Google Cloud credentials
-*-ba482b5fc3cc.json
+service-account.json
 *.json.key
 service-account*.json
-my-project-190325-454217-ba482b5fc3cc.json
 
 # Basic files
 index.html
