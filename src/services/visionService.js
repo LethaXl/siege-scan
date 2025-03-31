@@ -127,6 +127,12 @@ export async function processImage(file) {
         const skipTerms = ['ATK','DFF','ATC','ATV', 'A1K','DEC', 'DEB', 'BEF', 'OEF', 'D€F', 'D3F', 'DEF', 'O O','ATTACKER', 'DEFENDER', 'ROUND', 'MATCH', 'TEAM', 'NAVIGATE', 'NAVIGATE WITH', 'AVAILABE', 'ASSAULT RIFLE', 'ate with','WITH','ith'];
         if (skipTerms.some(term => line.toUpperCase().includes(term))) return false;
 
+        // Skip the word "ATTACK" on its own
+        if (line.toUpperCase() === 'ATTACK') return false;
+
+        // Skip any 4-letter combinations that are standalone (not part of a longer username)
+        if (/^[A-Za-z]{4}$/.test(line)) return false;
+
         // Skip any 3-letter uppercase combinations (likely game markers)
         if (/^[A-Z]{3}$/.test(line)) return false;
         
