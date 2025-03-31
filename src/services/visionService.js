@@ -127,6 +127,15 @@ export async function processImage(file) {
         const skipTerms = ['ATK','DFF','ATC','ATV', 'A1K','DEC', 'DEB', 'BEF', 'OEF', 'D€F', 'D3F', 'DEF', 'O O','ATTACKER', 'DEFENDER', 'ROUND', 'MATCH', 'TEAM', 'NAVIGATE', 'NAVIGATE WITH', 'AVAILABE', 'ASSAULT RIFLE', 'ate with','WITH','ith'];
         if (skipTerms.some(term => line.toUpperCase().includes(term))) return false;
 
+        // Skip any 3-letter uppercase combinations (likely game markers)
+        if (/^[A-Z]{3}$/.test(line)) return false;
+        
+        // Skip any 3-letter combinations that don't follow username rules
+        if (line.length === 3 && 
+            !(isValidPSNUsername(line) || isValidXboxUsername(line) || isValidPCUsername(line))) {
+          return false;
+        }
+        
         // Skip single numbers (1-5)
         if (/^[1-5]$/.test(line)) return false;
 
