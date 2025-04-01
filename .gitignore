@@ -42,10 +42,10 @@ pages/logo.js
 
 src/assets/
 
-public/detection
+public/detection/
 public/guide-images
 
-public/favicon2.png
+public/favicon2.PNG
 public/index.html
 public/vite.svg
 
