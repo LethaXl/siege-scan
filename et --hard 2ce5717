@@ -1,0 +1,43 @@
+[33mde38308[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m Remove sensitive files from repository
+[33m2ce5717[m Remove detection folder from repository
+[33mc3f4a51[m ignored
+[33m6335b55[m img size4
+[33m87d38fb[m img size3
+[33m1ca8f9a[m img size2
+[33maace2c1[m img size
+[33m8c71868[m readme updated
+[33m1f78a67[m more filters
+[33mb415d1a[m removed 3 letters from being detected
+[33mc86258d[m mobile updates
+[33m7a7611a[m mobile landscape update
+[33mf872566[m gesture bar dark mode
+[33m0d8ed96[m camera fix on upload
+[33m092b8f8[m camera fix
+[33m7b51868[m home page scrolling
+[33m4ef909a[m final
+[33m31d319d[m changed json name
+[33m83f2953[m almost
+[33m6c247ce[m gitignore updated
+[33m8ca46f6[m deployment time
+[33mdd53ebb[m lanscape fix on scan page
+[33mdbccf84[m improved guide page
+[33mdb3d275[m xbox to 15 char
+[33m3aa001f[m improved home
+[33m5426880[m scan landscape
+[33m10f030b[m forgot
+[33md87054a[m added scan context
+[33md7b8a07[m added header
+[33m3e4a251[m added nav bar
+[33me92f852[m added guide tab
+[33m5ad5a67[m ubi logo
+[33ma6aca61[m added flip animation n updated pc logo
+[33me82c0fa[m added favicon
+[33m6167ad3[m fixed image container
+[33m18e4d05[m button styled
+[33m0acae9e[m try again button
+[33m1c9b595[m raw cleaning
+[33m20461b7[m cleaned_tests
+[33m1f28de6[m psn 16 char limit
+[33m67cc4b0[m xbox 15 char limit
+[33mff810cc[m added def/atk validation
+[33mc23b5b2[m[33m ([m[1;32m27/3[m[33m)[m Initial commit
