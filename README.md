@@ -6,7 +6,7 @@ SiegeScan is a mobile-optimized web application that instantly extracts player u
 
 🎮 **[Try SiegeScan Live](https://siege-scan.vercel.app/)**
 
-<img src="/public/img.jpg" alt="SiegeScan Interface" width="600" style="border: 2px solid #ccc; border-radius: 8px;" />
+<img src="/public/img.jpg" alt="SiegeScan Interface" width="250" style="border: 2px solid #ccc; border-radius: 8px;" />
 
 ## Features
 
