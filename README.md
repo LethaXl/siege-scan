@@ -1,66 +1,61 @@
 # SiegeScan
 
-SiegeScan is a web application that extracts text from Rainbow Six Siege scoreboard images using OCR technology. It allows users to quickly look up player statistics by capturing screenshots of in-game scoreboards.
+## Overview
+
+SiegeScan is a mobile-optimized web application that instantly extracts player usernames from Rainbow Six Siege scoreboard screenshots and provides direct access to player statistics. Whether you're on your phone or desktop, simply take a photo or upload a screenshot for instant access to player profiles.
+
+🎮 **[Try SiegeScan Live](https://siege-scan.vercel.app/)**
+
+![SiegeScan Interface](/public/img.jpg)
 
 ## Features
 
-- Image upload and OCR processing using Google Cloud Vision API
-- Automatic player name extraction from scoreboard images
-- Direct links to R6 Tracker profiles
-- Mobile-friendly interface
-- Fast and responsive design
+- 🔍 **Instant OCR Processing** - Fast and accurate text extraction from scoreboard
+- 📊 **One-Click Stats** - Direct links to detailed player profiles
+- ⚡ **Fast Performance** - Quick processing and minimal loading times
 
-## Prerequisites
+## Installation
+
+### Prerequisites
 
 - Node.js (v14 or higher)
 - npm or yarn
-- Google Cloud Vision API key
 
-## Setup
+### Setup
 
-1. Clone the repository:
+1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/siege-scan.git
+git clone https://github.com/LethaXl/siege-scan.git
 cd siege-scan
 ```
 
-2. Install dependencies:
+2. Install dependencies
 ```bash
 npm install
 ```
 
-3. Create a `.env` file in the root directory and add your Google Cloud Vision API key:
-```
-REACT_APP_GOOGLE_CLOUD_VISION_API_KEY=your_api_key_here
-```
-
-4. Start the development server:
+3. Start the development server
 ```bash
 npm start
 ```
 
-The application will be available at `http://localhost:3000`.
+The application will be available at `http://localhost:3000`
 
 ## Usage
 
-1. Take a screenshot of the Rainbow Six Siege scoreboard during a match
-2. Upload the screenshot to SiegeScan
-3. Wait for the OCR processing to complete
-4. Click on any player name to view their detailed statistics on R6 Tracker
+1. **Upload Image**: Take a photo or upload a Rainbow Six Siege scoreboard screenshot
+2. **View Stats**: Click on any extracted username to view their detailed statistics
 
-## Technologies Used
+## Tech Stack
 
-- React
-- Tailwind CSS
-- Google Cloud Vision API
-- React Router
-- React Dropzone
-- Axios
+### Frontend
+- **React.js** - Core framework
+- **Tailwind CSS** - Styling
 
-## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+### APIs & Services
+- **Google Cloud Vision** - OCR processing
+- **Axios** - HTTP requests
 
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
+### Deployment
+- **Vercel** - Hosting platform
